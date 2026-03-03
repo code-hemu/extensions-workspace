@@ -1,0 +1,20 @@
+{
+  "name": "extensions-workspace",
+  "version": "1.0.0",
+  "description": "Development and task management hub for browser extensions.",
+  "homepage": "https://github.com/code-hemu/extensions-workspace#readme",
+  "bugs": {
+    "url": "https://github.com/code-hemu/extensions-workspace/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/code-hemu/extensions-workspace.git"
+  },
+  "license": "ISC",
+  "author": "Hemanta gayen",
+  "type": "commonjs",
+  "main": "build.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
