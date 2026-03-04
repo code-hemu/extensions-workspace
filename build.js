@@ -16,7 +16,8 @@ const platforms = [
     'chrome',
     'edge',
     'naver',
-    'opera'
+    'opera',
+    'firefox'
 ];
 
 let platform = [];
@@ -28,6 +29,7 @@ if (args.includes('--all')) {
     if (args.includes('--edge')) platform.push('edge');
     if (args.includes('--opera')) platform.push('opera');
     if (args.includes('--naver')) platform.push('naver');
+    if (args.includes('--firefox')) platform.push('firefox');
 }
 
 const versionArg = args.find((a) => a.startsWith('--version='));
