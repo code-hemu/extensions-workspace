@@ -11,7 +11,7 @@ function printHelp() {
         '',
         'To narrow down the list of build targets (for efficiency):',
         '  --all          Build for all platforms',
-        '  --chrome-mv3   MV3 for Chromium-based browsers',
+        '  --chrome       MV3 for Chromium-based browsers',
         '  --naver        Naver Whale',
         '',
         'Other parameters:',
