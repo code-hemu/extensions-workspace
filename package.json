@@ -12,8 +12,7 @@
   },
   "license": "ISC",
   "author": "Hemanta gayen",
-  "type": "commonjs",
-  "main": "build.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   }
