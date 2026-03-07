@@ -17,7 +17,8 @@ const platforms = [
     'edge',
     'naver',
     'opera',
-    'firefox'
+    'firefox',
+    'thunderbird'
 ];
 
 let platform = [];
@@ -30,10 +31,11 @@ if (args.includes('--all')) {
     if (args.includes('--opera')) platform.push('opera');
     if (args.includes('--naver')) platform.push('naver');
     if (args.includes('--firefox')) platform.push('firefox');
+    if (args.includes('--thunderbird')) platform.push('thunderbird');
 }
 
 const versionArg = args.find((a) => a.startsWith('--version='));
-const version = versionArg ? versionArg.substring('--version='.length) : null;
+const version = versionArg ? versionArg.split('=')[1] : null;
 
 const settings = {
     platforms: platform,
