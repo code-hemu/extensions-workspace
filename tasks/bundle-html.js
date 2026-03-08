@@ -8,7 +8,7 @@ import {createTask} from './task.js';
 const srcHTMLDir = 'src/html';
 
 async function removeTopSourceComment(filePath) {
-    let code = await readFile(filePath, 'utf8');
+    const code = await readFile(filePath, 'utf8');
     const newCode = code.replace(/^\s*<!--[\s\S]*?-->\s*/, '');
     await writeFile(filePath, newCode);
 }
@@ -68,7 +68,7 @@ export function createBundleHTMLTask(srcHTMLDir){
             );
 
             if (exists){
-                let newConfig = {
+                const newConfig = {
                     html: {
                         entry: exists,
                         filename: config.html.filename

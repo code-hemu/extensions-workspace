@@ -8,7 +8,7 @@ import {createTask} from './task.js';
 const srcSCSSDir = 'src/scss';
 
 async function removeTopSourceComment(filePath) {
-    let code = await readFile(filePath, 'utf8');
+    const code = await readFile(filePath, 'utf8');
     const newCode = code.replace(/^\/\*[\s\S]*?\*\//, '');
     await writeFile(filePath, newCode);
 }
@@ -73,7 +73,7 @@ export function createBundleCSSTask(srcSCSSDir){
                     changedFiles[0]
                 );
                 if (exists){
-                    let newConfig = {
+                    const newConfig = {
                         scss: {
                             entry: exists,
                             filename: config.scss.filename,
