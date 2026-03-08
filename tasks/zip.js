@@ -6,7 +6,7 @@ import yazl from 'yazl';
 import {getDestDir} from './paths.js';
 import {createTask} from './task.js';
 
-import {getAllFiles} from './utils.js';
+import {getAllFiles, getConfig} from './utils.js';
 
 function archiveFiles({files, dest, cwd, date, mode}) {
     return new Promise((resolve) => {
@@ -46,15 +46,18 @@ async function zip({platforms, isDebug, version}) {
     const date = await getLastCommitTime();
     const xpiPlatforms = [];
     for (const platform of platforms) {
-        const format = xpiPlatforms.includes(platform) ? 'xpi' : 'zip';
-        const dest = `${releaseDir}/volume-booster-${platform}${version}.${format}`;
-        promises.push(archiveDirectory({
-            dir: getDestDir({isDebug, platform}),
-            dest,
-            date,
-            mode: 0o644
-        }));
-        await Promise.all(promises);
+        const config = await getConfig(platform);
+        if (config && Object.keys(config).length != 0){
+            const format = xpiPlatforms.includes(platform) ? 'xpi' : 'zip';
+            const dest = `${releaseDir}/volume-booster-${platform}${version}.${format}`;
+            promises.push(archiveDirectory({
+                dir: getDestDir({isDebug, platform}),
+                dest,
+                date,
+                mode: 0o644
+            }));
+            await Promise.all(promises);
+        }
     }
 }
 
