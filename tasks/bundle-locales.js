@@ -5,7 +5,7 @@ import {getDestDir, absolutePath} from './paths.js';
 import {readFile, writeFile, getAllFiles, getConfig} from './utils.js';
 import {createTask} from './task.js';
 
-const srcLocalesDir = 'src/_locales';
+const srcLocalesDir = '../src/_locales';
 
 async function writeFiles(data, fileName, {platform, isDebug}){
     const locale = fileName.substring(0, fileName.lastIndexOf('.')).replace('-', '_');
