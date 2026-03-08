@@ -32,7 +32,7 @@ export async function pathExists(dest) {
     try {
         accessSync(dest);
         return true;
-    } catch (err) {
+    } catch {
         return false;
     }
 }

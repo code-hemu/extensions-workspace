@@ -1,21 +1,21 @@
-const fs = require("fs");
-const path = require("path");
+import { mkdirSync, readdirSync, existsSync, readFileSync, writeFileSync } from "fs";
+import { join } from "path";
 
-const localesDir = path.join(__dirname, "_locales");
-const outputDir = path.join(__dirname, "output", "_locales");
+const localesDir = join(__dirname, "_locales");
+const outputDir = join(__dirname, "output", "_locales");
 
-fs.mkdirSync(outputDir, { recursive: true });
+mkdirSync(outputDir, { recursive: true });
 
 console.log("Output directory ready.");
 
-const languages = fs.readdirSync(localesDir);
+const languages = readdirSync(localesDir);
 
 languages.forEach((lang) => {
-  const messagesPath = path.join(localesDir, lang, "messages.json");
+  const messagesPath = join(localesDir, lang, "messages.json");
 
-  if (!fs.existsSync(messagesPath)) return;
+  if (!existsSync(messagesPath)) return;
 
-  const input = JSON.parse(fs.readFileSync(messagesPath, "utf8"));
+  const input = JSON.parse(readFileSync(messagesPath, "utf8"));
 
   let output = "";
 
@@ -24,8 +24,8 @@ languages.forEach((lang) => {
     output += `${input[key].message}\n\n`;
   }
 
-  const outputPath = path.join(outputDir, `${lang}.i18n`);
-  fs.writeFileSync(outputPath, output);
+  const outputPath = join(outputDir, `${lang}.i18n`);
+  writeFileSync(outputPath, output);
 
   console.log(`${lang}.i18n created`);
 });

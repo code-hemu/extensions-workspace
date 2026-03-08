@@ -15,8 +15,8 @@ async function writeFiles(data, fileName, {platform, isDebug}){
 }
 
 async function localeFileToJson(filePath) {
-    let isfile = await readFile(filePath);
-    let file = isfile.replace(/^#.*?$/gm, '');
+    const isfile = await readFile(filePath);
+    const file = isfile.replace(/^#.*?$/gm, '');
 
     const messages = {};
     const regex = /@([a-z0-9_]+)/ig;
@@ -31,7 +31,7 @@ async function localeFileToJson(filePath) {
             messageEnd = file.length;
         }
 
-        let messageContent = file
+        const messageContent = file
             .substring(messageStart, messageEnd)
             .replace(/\n/g, ' ')      // remove line breaks
             .replace(/\s+/g, ' ')     // normalize extra spaces
