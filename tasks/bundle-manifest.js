@@ -1,6 +1,6 @@
 import {getDestDir, absolutePath} from './paths.js';
 import {createTask} from './task.js';
-import {readJSON, writeJSON, getAllFiles, pathExists} from './utils.js';
+import {readJSON, writeJSON, getAllFiles, pathExists, getConfig} from './utils.js';
 
 const srcManifestDir = '../src/manifest';
 
@@ -25,10 +25,13 @@ async function patchManifest(srcManifestDir, platform, isDebug, isWatch, isTest,
 
 async function bundleManifest(srcManifestDir, {platforms, isWatch, isDebug, isTest, logInfo, version}) {
     for (const platform of platforms) {
-        const manifest = await patchManifest(srcManifestDir, platform, isDebug, isWatch, isTest, version);
-        const destDir = getDestDir({isDebug, platform});
-        await writeJSON(`${destDir}/manifest.json`, manifest);
-        if (logInfo) log.ok(`Bundled manifest for platform ${platform}.`);
+        const config = await getConfig(platform);
+        if (config && Object.keys(config).length != 0){
+            const manifest = await patchManifest(srcManifestDir, platform, isDebug, isWatch, isTest, version);
+            const destDir = getDestDir({isDebug, platform});
+            await writeJSON(`${destDir}/manifest.json`, manifest);
+            if (logInfo) log.ok(`Bundled manifest for platform ${platform}.`);
+        }
     }
 
 }

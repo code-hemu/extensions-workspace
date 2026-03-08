@@ -88,12 +88,14 @@ async function bundleLocales(srcLocalesDir, {platforms, isDebug, logInfo}) {
         const fileName = name.substring(name.lastIndexOf('/') + 1);
         for (const platform of platforms) {
             const config = (await getConfig(platform));
-            if(config.locales){
-                if(config.locales.includes(code)){
+            if (config && Object.keys(config).length != 0){
+                if(config.locales){
+                    if(config.locales.includes(code)){
+                        await writeFiles(locale, fileName, {platform, isDebug});
+                    }
+                } else{
                     await writeFiles(locale, fileName, {platform, isDebug});
                 }
-            } else{
-                await writeFiles(locale, fileName, {platform, isDebug});
             }
         }
         
