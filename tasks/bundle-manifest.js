@@ -2,7 +2,7 @@ import {getDestDir, absolutePath} from './paths.js';
 import {createTask} from './task.js';
 import {readJSON, writeJSON, getAllFiles, pathExists, getConfig} from './utils.js';
 
-const srcManifestDir = '../src/manifest';
+const srcManifestDir = 'src/manifest';
 
 async function patchManifest(srcManifestDir, platform, isDebug, isWatch, isTest, version) {
     const manifestPath = `${srcManifestDir}/manifest-${platform}.json`;
