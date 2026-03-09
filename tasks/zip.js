@@ -6,7 +6,7 @@ import yazl from 'yazl';
 import {getDestDir} from './paths.js';
 import {createTask} from './task.js';
 
-import {getAllFiles, getConfig} from './utils.js';
+import {getAllFiles, getConfig, readJSON} from './utils.js';
 
 function archiveFiles({files, dest, cwd, date, mode}) {
     return new Promise((resolve) => {
