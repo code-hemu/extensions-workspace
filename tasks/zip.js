@@ -3,7 +3,7 @@ import fs from 'node:fs';
 
 import yazl from 'yazl';
 
-import {getDestDir} from './paths.js';
+import {getDestDir, absolutePath} from './paths.js';
 import {createTask} from './task.js';
 
 import {getAllFiles, getConfig, readJSON} from './utils.js';
