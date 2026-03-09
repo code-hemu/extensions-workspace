@@ -48,8 +48,9 @@ async function zip({platforms, isDebug, version}) {
     for (const platform of platforms) {
         const config = await getConfig(platform);
         if (config && Object.keys(config).length != 0){
+            const packageJSON = await readJSON(absolutePath("package.json"));
             const format = xpiPlatforms.includes(platform) ? 'xpi' : 'zip';
-            const dest = `${releaseDir}/volume-booster-${platform}${version}.${format}`;
+            const dest = `${releaseDir}/${packageJSON.name}-${platform}${version}.${format}`;
             promises.push(archiveDirectory({
                 dir: getDestDir({isDebug, platform}),
                 dest,
