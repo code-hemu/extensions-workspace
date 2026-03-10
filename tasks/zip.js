@@ -42,9 +42,9 @@ async function zip({platforms, isDebug, version}) {
     }
     version = version ? `-${version}` : '';
     const releaseDir = 'build/release';
-    const promises = ["firefox", "thunderbird"];
+    const promises = [];
     const date = await getLastCommitTime();
-    const xpiPlatforms = [];
+    const xpiPlatforms = ["firefox", "thunderbird"];
     for (const platform of platforms) {
         const config = await getConfig(platform);
         if (config && Object.keys(config).length != 0){
