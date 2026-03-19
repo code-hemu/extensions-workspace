@@ -1,7 +1,7 @@
 import fs from 'node:fs/promises';
 import * as readline from 'node:readline/promises';
 import { stdin as input, stdout as output } from 'node:process';
-import {readFile, writeFile, httpsRequest, timeout} from './utils.js';
+import {readFile, writeFile, httpsRequest, timeout} from '../tasks/utils.js';
 
 
 const LOCALES_ROOT = 'src/_locales';
@@ -165,14 +165,31 @@ async function translateEnMessage(message, customId) {
       console.log(`Already exists in: ${locFile}`);
       continue;
     }
+    
+    const translatedDefault = await translate(message, locale);
 
-    const translated = await translate(message, locale);
-    locMessages.set(messageId, translated);
+    console.log(`Output : ${locale}: ${translatedDefault}`);
+
+    const choice = await rl.question(
+      'Press Enter to accept, type "n" to skip, or enter your own translation: '
+    );
+
+    const input = choice.trim();
+
+    if (input.toLowerCase() === "n") {
+      console.log("Skipped ❌");
+      return;
+    }
+
+    const finalTranslation = input !== "" ? input : translatedDefault;
+
+    locMessages.set(messageId, finalTranslation);
 
     const output = stringifyLocale(locMessages);
     await writeFile(locFile, output);
 
-    console.log(`${locale}: ${translated}`);
+    console.log("Saved ✅");
+
   }
 }
 
