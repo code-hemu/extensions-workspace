@@ -165,11 +165,11 @@ async function translateEnMessage(message, customId) {
       console.log(`Already exists in: ${locFile}`);
       continue;
     }
-    
+
     const translatedDefault = await translate(message, locale);
 
     console.log(`Output : ${locale}: ${translatedDefault}`);
-
+    const rl = readline.createInterface({ input, output });
     const choice = await rl.question(
       'Press Enter to accept, type "n" to skip, or enter your own translation: '
     );
