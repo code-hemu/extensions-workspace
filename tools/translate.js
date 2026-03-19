@@ -174,19 +174,19 @@ async function translateEnMessage(message, customId) {
       'Press Enter to accept, type "n" to skip, or enter your own translation: '
     );
 
-    const input = choice.trim();
+    const inputs = choice.trim();
 
-    if (input.toLowerCase() === "n") {
+    if (inputs.toLowerCase() === "n") {
       console.log("Skipped ❌");
-      return;
+      continue;
     }
 
-    const finalTranslation = input !== "" ? input : translatedDefault;
+    const finalTranslation = inputs !== "" ? inputs : translatedDefault;
 
     locMessages.set(messageId, finalTranslation);
 
-    const output = stringifyLocale(locMessages);
-    await writeFile(locFile, output);
+    const outputs = stringifyLocale(locMessages);
+    await writeFile(locFile, outputs);
 
     console.log("Saved ✅");
 
