@@ -93,7 +93,7 @@ async function translate(text, lang) {
     return translation.sentences.map((s) => s.trans).join('\n').replaceAll(/\n+/g, '\n');
 }
 
-async function deleteMessage(messageId) {
+async function deleteMessage(messageId, targetLocale = null) {
   const supportedLocales = await getSupportedLocales();
 
   if (!messageId || !messageId.trim()) {
@@ -104,25 +104,42 @@ async function deleteMessage(messageId) {
   const id = messageId.trim();
   let foundAnywhere = false;
 
-  for (const locale of supportedLocales) {
+  // 🎯 Decide scope
+  const localesToProcess = targetLocale
+    ? [targetLocale]
+    : supportedLocales;
+
+  for (const locale of localesToProcess) {
     const locFile = `${LOCALES_ROOT}/${locale}.i18n`;
-    const locContent = await readFile(locFile);
-    const locMessages = parseLocale(locContent);
 
-    if (!locMessages.has(id)) {
-      continue;
+    try {
+      const locContent = await readFile(locFile);
+      const locMessages = parseLocale(locContent);
+
+      if (!locMessages.has(id)) {
+        continue;
+      }
+
+      locMessages.delete(id);
+
+      const output = stringifyLocale(locMessages);
+      await writeFile(locFile, output);
+
+      console.log(`✔ Removed from ${locale}.i18n`);
+      foundAnywhere = true;
+
+    } catch (err) {
+      console.log(`⚠ Failed to process ${locale}: ${err.message}`);
     }
-
-    locMessages.delete(id);
-    const output = stringifyLocale(locMessages);
-    await writeFile(locFile, output);
-
-    console.log(`✔ Removed from ${locale}.i18n`);
-    foundAnywhere = true;
   }
 
+  // 🧾 Final status
   if (!foundAnywhere) {
-    console.log('⚠ Message key not found in any locale.');
+    console.log(
+      targetLocale
+        ? `⚠ Message key not found in ${targetLocale}.`
+        : '⚠ Message key not found in any locale.'
+    );
   } else {
     console.log('🗑 Deletion completed.');
   }
@@ -168,28 +185,12 @@ async function translateEnMessage(message, customId) {
 
     const translatedDefault = await translate(message, locale);
 
-    console.log(`Output : ${locale}: ${translatedDefault}`);
-    const rl = readline.createInterface({ input, output });
-    const choice = await rl.question(
-      'Press Enter to accept, type "n" to skip, or enter your own translation: '
-    );
+    console.log(`✅ Output: ${locale}: ${translatedDefault}`);
 
-    const inputs = choice.trim();
-
-    if (inputs.toLowerCase() === "n") {
-      console.log("Skipped ❌");
-      continue;
-    }
-
-    const finalTranslation = inputs !== "" ? inputs : translatedDefault;
-
-    locMessages.set(messageId, finalTranslation);
+    locMessages.set(messageId, translatedDefault);
 
     const outputs = stringifyLocale(locMessages);
     await writeFile(locFile, outputs);
-
-    console.log("Saved ✅");
-
   }
 }
 
@@ -230,29 +231,55 @@ async function main() {
           break;
         }
 
-        case '2': {
-            const messageId = (await rl.question(
-                'Enter message key to delete: '
-            )).trim();
+       case '2': {
+          const messageId = (await rl.question(
+              'Enter message key to delete: '
+          )).trim();
 
-            if (!messageId) {
-                console.log('⚠ Message key cannot be empty.');
-                break;
-            }
+          if (!messageId) {
+              console.log('⚠ Message key cannot be empty.');
+              break;
+          }
 
-            const confirm = (await rl.question(
-                `Are you sure you want to delete "${messageId}" from all locales? (y/n): `
-            ))
-                .trim()
-                .toLowerCase();
+          // 🌍 Ask scope
+          const scope = (await rl.question(
+              'Delete from (a)ll locales or specific locale? (a/s): '
+          )).trim().toLowerCase();
 
-            if (confirm !== 'y') {
-                console.log('Deletion cancelled.');
-                break;
-            }
+          let targetLocale = null;
 
-            await deleteMessage(messageId);
-            break;
+          if (scope === 's') {
+              targetLocale = (await rl.question(
+                  'Enter locale (e.g., en, fa, ru): '
+              )).trim();
+
+              if (!targetLocale) {
+                  console.log('⚠ Locale cannot be empty.');
+                  break;
+              }
+          }
+
+          // ✅ Confirmation
+          const confirm = (await rl.question(
+              targetLocale
+                  ? `Are you sure you want to delete "${messageId}" from "${targetLocale}"? (y/n): `
+                  : `Are you sure you want to delete "${messageId}" from ALL locales? (y/n): `
+          )).trim().toLowerCase();
+
+          if (confirm !== 'y') {
+              console.log('Deletion cancelled.');
+              break;
+          }
+
+          // 🔥 Delete logic
+          if (targetLocale) {
+              await deleteMessage(messageId, targetLocale);
+          } else {
+              await deleteMessage(messageId);
+          }
+
+          console.log('Deleted ✅');
+          break;
         }
 
         case '0':
